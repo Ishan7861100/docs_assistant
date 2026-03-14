@@ -4,6 +4,8 @@ import { Search, ChevronLeft, ChevronRight, ArrowUpFromLine, Loader2, Trash2, Fl
 import { DocumentMetadata, getFileType, formatFileSize, formatDate } from '../types';
 import { FileIcon } from './FileIcon';
 import { useAuth } from '../context/AuthContext';
+import logo from '../../public/assets/logo.svg';
+import logoIcon from '../../public/assets/logo-icon.svg';
 
 interface SidebarProps {
   documents: DocumentMetadata[];
@@ -72,7 +74,7 @@ export function Sidebar({
     return (
       <div className="flex flex-col items-center w-14 bg-[#111111] border-r border-[#2a2a2a] py-4 flex-shrink-0">
         {/* Logo icon */}
-        <img src="/public/assets/logo-icon.svg" alt='logo' className='mb-4'/>
+        <img src={logoIcon} alt='logo' className='mb-4'/>
         <button
           onClick={() => setCollapsed(false)}
           className="text-white border border-transparent transition-colors px-1 py-1 rounded-full min-w-[22px] text-center bg-[#272A34] hover:bg-[#111217] hover:border-[#36384333]"
@@ -94,7 +96,7 @@ export function Sidebar({
       <div className="flex items-center justify-between px-4 pt-4 pb-3 flex-shrink-0">
         <div className="flex items-center gap-2.5">
           {/* Updated logo: orange rounded-xl square with flame icon */}
-          <img src="/public/assets/logo.svg" alt='logo'/>
+          <img src={logo} alt='logo'/>
           {/* <span className="text-white font-semibold text-base tracking-tight">DocMind</span> */}
         </div>
         <button
