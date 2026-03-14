@@ -192,7 +192,7 @@ export function Sidebar({
                   className={`group flex items-center gap-2.5 px-2 py-2.5 rounded-xl cursor-pointer transition-all relative
                     ${isSelected
                       ? 'bg-[#1e1e1e] border-l-[3px] border-orange-500 pl-[5px]'
-                      : 'hover:bg-[#181818] border-l-[3px] border-transparent'
+                      : 'hover:bg-[#181818] border-l-[3px] border-transparent pl-[5px]'
                     }
                   `}
                 >
