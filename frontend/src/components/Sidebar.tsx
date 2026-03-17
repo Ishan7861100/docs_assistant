@@ -72,7 +72,7 @@ export function Sidebar({
   /* ── Collapsed state ── */
   if (collapsed) {
     return (
-      <div className="flex flex-col items-center w-14 bg-[#111111] border-r border-[#2a2a2a] py-4 flex-shrink-0">
+      <div className="flex flex-col items-center w-14 bg-[#111111] border-r border-[#2a2a2a] pt-4 pb-3 flex-shrink-0">
         {/* Logo icon */}
         <img src={logoIcon} alt='logo' className='mb-4'/>
         <button
@@ -191,8 +191,8 @@ export function Sidebar({
                   onClick={() => onSelectDocument(isSelected ? null : doc.id)}
                   className={`group flex items-center gap-2.5 px-2 py-2.5 rounded-xl cursor-pointer transition-all relative
                     ${isSelected
-                      ? 'bg-[#1e1e1e] border-l-[3px] border-orange-500 pl-[5px]'
-                      : 'hover:bg-[#181818] border-l-[3px] border-transparent pl-[5px]'
+                      ? 'bg-[#1e1e1e] border-r-[3px] border-orange-500'
+                      : 'hover:bg-[#181818] border-r-[3px] border-transparent'
                     }
                   `}
                 >
@@ -218,13 +218,13 @@ export function Sidebar({
                   <button
                     onClick={e => handleDelete(e, doc.id)}
                     disabled={isDeleting}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-red-500/20 text-gray-600 hover:text-red-400 transition-all flex-shrink-0"
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-[#FB252C] hover:text-[#EF5156] transition-all flex-shrink-0"
                     title="Delete document"
                   >
                     {isDeleting ? (
-                      <Loader2 size={12} className="animate-spin" />
+                      <Loader2 size={18} className="animate-spin" />
                     ) : (
-                      <Trash2 size={12} />
+                      <Trash2 size={18}/>
                     )}
                   </button>
                 </div>

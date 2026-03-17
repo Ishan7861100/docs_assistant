@@ -3,19 +3,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Copy, Check, AlertCircle, Loader2 } from 'lucide-react';
 import { ChatMessage } from '../types';
+import AiMessageIcon from '../../public/assets/ai-message-icon.svg';
 
 interface MessagePairProps {
   question: ChatMessage;
   answer: ChatMessage | null;
   isLoading?: boolean;
-}
-
-function SparkleIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-      <path d="M12 2 L13.5 9.5 L21 11 L13.5 12.5 L12 20 L10.5 12.5 L3 11 L10.5 9.5 Z" />
-    </svg>
-  );
 }
 
 export function MessageBubble({ question, answer, isLoading = false }: MessagePairProps) {
@@ -61,8 +54,8 @@ export function MessageBubble({ question, answer, isLoading = false }: MessagePa
         {/* Loading state */}
         {isLoading && !answer && (
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
-              <SparkleIcon />
+            <div className="w-9 h-9 rounded-lg bg-[#4B56750F] flex items-center justify-center flex-shrink-0">
+              <img src={AiMessageIcon} alt='message icon' />
             </div>
             <div className="flex items-center gap-2 text-gray-400 text-sm">
               <Loader2 size={14} className="animate-spin text-orange-400" />
@@ -89,8 +82,8 @@ export function MessageBubble({ question, answer, isLoading = false }: MessagePa
           <>
             {/* AI Answer header */}
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
-                <SparkleIcon />
+              <div className="w-9 h-9 rounded-lg bg-[#4B56750F] flex items-center justify-center flex-shrink-0">
+                <img src={AiMessageIcon} alt='message icon' />
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900 leading-tight">AI Answer</p>

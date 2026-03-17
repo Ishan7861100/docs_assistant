@@ -10,10 +10,10 @@ interface ChatInterfaceProps {
 }
 
 const QUICK_ACTIONS = [
-  'Summarise key metrics',
-  'Find action items',
-  'Q1 performance overview',
-  'Risks & challenges',
+  'Provide a brief summary',
+  'List main highlights',
+  'Break this down simply',
+  'What should I know',
 ];
 
 export function ChatInterface({ selectedDocument, allDocuments }: ChatInterfaceProps) {
