@@ -6,6 +6,7 @@ import { FileIcon } from './FileIcon';
 import { useAuth } from '../context/AuthContext';
 import logo from '../../public/assets/logo.svg';
 import logoIcon from '../../public/assets/logo-icon.svg';
+import uploadFileIcon from '../../public/assets/upload-file-icon.svg';
 
 interface SidebarProps {
   documents: DocumentMetadata[];
@@ -109,7 +110,7 @@ export function Sidebar({
 
       {/* ── Upload Area ── */}
       <div className="px-3 pt-4 mb-6 flex-shrink-0">
-        <p className="text-[#FFFFFF66] text-xs font-medium mb-2 px-1">Upload Document</p>
+        <p className="text-[#FFFFFF66] text-sm font-medium mb-2 px-1">Upload Document</p>
         <div
           {...getRootProps()}
           className={`relative border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all
@@ -136,12 +137,12 @@ export function Sidebar({
             <>
               {/* Upload icon with base platform */}
               <div className="w-12 h-12 mx-auto mb-2 bg-[#D74E000F] rounded-xl flex items-center justify-center border border-dashed border-[#D74E0033]">
-                <ArrowUpFromLine size={20} className="text-orange-500" />
+                <img src={uploadFileIcon} alt='upload file'/>
               </div>
-              <p className="text-gray-200 text-xs font-medium leading-tight">
+              <p className="text-[#F5F5F5] text-xs font-medium leading-tight">
                 {isDragActive ? 'Drop file here' : 'Click or Drag & Drop'}
               </p>
-              <p className="text-gray-500 text-[10px] mt-1">PDF, DOCX, TXT (max. 80 MB)</p>
+              <p className="text-[#FFFFFF80] text-xs mt-[6px]">PDF, DOCX, TXT (max. 80 MB)</p>
             </>
           )}
         </div>
@@ -150,7 +151,7 @@ export function Sidebar({
       {/* ── Your Files header + Search ── */}
       <div className="px-3 mb-1.5 flex-shrink-0">
         <div className="flex items-center gap-3 mb-2 px-1">
-          <span className="text-[#FFFFFF66] text-xs font-semibold">Your files</span>
+          <span className="text-[#FFFFFF66] text-sm font-semibold">Your files</span>
           {/* Orange pill badge matching screenshot */}
           <span className="bg-[#4B567524] text-[#D74E00] text-[10px] font-bold px-2 py-0.5 rounded-full min-w-[35px] text-center leading-4">
             {documents.length}
@@ -159,13 +160,13 @@ export function Sidebar({
 
         {/* Search box */}
         <div className="relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#F5F5F5] opacity-60" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search Files..."
-            className="w-full bg-[#1a1a1a] text-gray-300 placeholder-gray-600 text-xs rounded-lg pl-7 pr-3 py-2 border border-[#2a2a2a] focus:border-[#3a3a3a] focus:outline-none transition-colors"
+            className="w-full bg-[#1a1a1a] text-gray-300 placeholder-[#F5F5F5] placeholder-opacity-60 text-xs rounded-lg pl-7 pr-3 py-2 border border-[#2a2a2a] focus:border-[#3a3a3a] focus:outline-none transition-colors"
           />
         </div>
       </div>
@@ -206,10 +207,22 @@ export function Sidebar({
                     <p className="text-gray-500 text-[10px] leading-tight mt-0.5">
                       {formatFileSize(doc.size)} • {formatDate(doc.uploadedAt)}
                     </p>
-                    {!doc.processed && (
+                    {!doc.processed && !doc.processingFailed && (
                       <span className="inline-flex items-center gap-1 text-[9px] text-orange-400 mt-0.5">
                         <Loader2 size={8} className="animate-spin" />
                         Processing…
+                      </span>
+                    )}
+                    {doc.processingFailed && (
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] text-red-400 mt-0.5 leading-tight cursor-help"
+                        title={doc.processingError ?? 'Processing failed'}
+                      >
+                        ⚠ {doc.processingError
+                          ? doc.processingError.length > 42
+                            ? doc.processingError.slice(0, 42) + '…'
+                            : doc.processingError
+                          : 'Failed to process'}
                       </span>
                     )}
                   </div>
@@ -241,7 +254,6 @@ export function Sidebar({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-white text-xs font-semibold truncate">{user?.name ?? 'User'}</p>
-          <p className="text-gray-500 text-[10px] truncate">{user?.email}</p>
         </div>
         <button
           onClick={logout}

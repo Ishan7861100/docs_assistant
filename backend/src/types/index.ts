@@ -13,9 +13,12 @@ export interface DocumentMetadata {
   originalName: string;
   mimeType: string;
   size: number;
-  path: string;
+  cloudinaryUrl: string;   // Cloudinary secure URL
+  cloudinaryId: string;    // Cloudinary public_id (for deletion)
   uploadedAt: string;
   processed: boolean;
+  processingFailed?: boolean;
+  processingError?: string;
   chunkCount: number;
 }
 

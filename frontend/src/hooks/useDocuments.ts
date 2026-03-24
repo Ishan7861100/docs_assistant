@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { DocumentMetadata } from '../types';
 import { documentsApi } from '../services/api';
+import { getApiError } from '../lib/utils';
 
 export function useDocuments() {
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
@@ -15,7 +16,7 @@ export function useDocuments() {
       const docs = await documentsApi.list();
       setDocuments(docs);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load documents');
+      setError(getApiError(err, 'Failed to load documents.'));
     } finally {
       setIsLoading(false);
     }
@@ -27,7 +28,7 @@ export function useDocuments() {
 
   // Poll for processing status
   useEffect(() => {
-    const pending = documents.filter(d => !d.processed);
+    const pending = documents.filter(d => !d.processed && !d.processingFailed);
     if (pending.length === 0) return;
 
     const interval = setInterval(async () => {

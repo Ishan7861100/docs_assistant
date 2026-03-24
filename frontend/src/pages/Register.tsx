@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getApiError } from '../lib/utils';
 
 export function Register() {
   const { register, isLoading } = useAuth();
@@ -24,7 +25,7 @@ export function Register() {
       await register(email, password, name);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      setError(getApiError(err, 'Registration failed. Please try again.'));
     }
   };
 

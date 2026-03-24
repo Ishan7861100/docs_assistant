@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Save, RotateCcw, Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
 import { settingsApi } from '../services/api';
 import { Settings as SettingsType } from '../types';
+import { getApiError } from '../lib/utils';
 
 const MODEL_OPTIONS = [
   { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Recommended)' },
@@ -54,7 +55,7 @@ export function Settings() {
       setSettings(updated);
       setApiKey('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Save failed');
+      setError(getApiError(err, 'Failed to save settings.'));
     } finally {
       setIsSaving(false);
     }
@@ -72,7 +73,7 @@ export function Settings() {
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Reset failed');
+      setError(getApiError(err, 'Failed to reset settings.'));
     } finally {
       setIsResetting(false);
     }

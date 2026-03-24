@@ -1,13 +1,11 @@
+import 'dotenv/config'; // must be first — loads .env before any service modules initialize
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { authRouter } from './routes/auth';
 import { documentsRouter } from './routes/documents';
 import { chatRouter } from './routes/chat';
 import { settingsRouter } from './routes/settings';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;

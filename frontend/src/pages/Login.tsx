@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getApiError } from '../lib/utils';
 
 export function Login() {
   const { login, isLoading } = useAuth();
@@ -21,7 +22,7 @@ export function Login() {
       await login(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(getApiError(err, 'Login failed. Please check your credentials.'));
     }
   };
 

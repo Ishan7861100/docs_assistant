@@ -4,6 +4,7 @@ import { Settings } from 'lucide-react';
 import { Sidebar } from '../components/Sidebar';
 import { ChatInterface } from '../components/ChatInterface';
 import { useDocuments } from '../hooks/useDocuments';
+import { getApiError } from '../lib/utils';
 
 export function Dashboard() {
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export function Dashboard() {
       clearInterval(progressInterval);
       setUploadProgress(100);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Upload failed';
+      const msg = getApiError(err, 'Upload failed. Please try again.');
       setUploadError(msg);
     } finally {
       setTimeout(() => {

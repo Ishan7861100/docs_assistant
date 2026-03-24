@@ -15,6 +15,8 @@ export interface DocumentMetadata {
   path: string;
   uploadedAt: string;
   processed: boolean;
+  processingFailed?: boolean;
+  processingError?: string;
   chunkCount: number;
 }
 

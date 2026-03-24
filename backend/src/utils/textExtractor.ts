@@ -1,40 +1,27 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-export async function extractText(filePath: string, mimeType: string): Promise<string> {
-  const ext = path.extname(filePath).toLowerCase();
-
-  if (mimeType === 'application/pdf' || ext === '.pdf') {
-    return extractFromPDF(filePath);
-  } else if (
-    mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-    ext === '.docx'
-  ) {
-    return extractFromDocx(filePath);
-  } else if (mimeType === 'text/plain' || ext === '.txt') {
-    return extractFromTxt(filePath);
+export async function extractText(buffer: Buffer, mimeType: string): Promise<string> {
+  if (mimeType === 'application/pdf') {
+    return extractFromPDF(buffer);
+  } else if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    return extractFromDocx(buffer);
+  } else if (mimeType === 'text/plain') {
+    return buffer.toString('utf-8');
   } else {
-    throw new Error(`Unsupported file type: ${mimeType || ext}`);
+    throw new Error(`Unsupported file type: ${mimeType}`);
   }
 }
 
-async function extractFromPDF(filePath: string): Promise<string> {
+async function extractFromPDF(buffer: Buffer): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const pdfParse = require('pdf-parse');
-  const buffer = await fs.readFile(filePath);
   const data = await pdfParse(buffer);
   return data.text;
 }
 
-async function extractFromDocx(filePath: string): Promise<string> {
+async function extractFromDocx(buffer: Buffer): Promise<string> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mammoth = require('mammoth');
-  const result = await mammoth.extractRawText({ path: filePath });
+  const result = await mammoth.extractRawText({ buffer });
   return result.value;
-}
-
-async function extractFromTxt(filePath: string): Promise<string> {
-  return fs.readFile(filePath, 'utf-8');
 }
 
 export function splitIntoChunks(text: string, chunkSize = 1000, overlap = 200): string[] {
@@ -45,7 +32,6 @@ export function splitIntoChunks(text: string, chunkSize = 1000, overlap = 200): 
   for (const sentence of sentences) {
     if ((currentChunk + ' ' + sentence).length > chunkSize && currentChunk.length > 0) {
       chunks.push(currentChunk.trim());
-      // Keep last part for overlap
       const words = currentChunk.split(' ');
       const overlapWords = words.slice(-Math.floor(overlap / 6));
       currentChunk = overlapWords.join(' ') + ' ' + sentence;
@@ -58,7 +44,6 @@ export function splitIntoChunks(text: string, chunkSize = 1000, overlap = 200): 
     chunks.push(currentChunk.trim());
   }
 
-  // If no sentences were found, fall back to character-based splitting
   if (chunks.length === 0 && text.length > 0) {
     for (let i = 0; i < text.length; i += chunkSize - overlap) {
       chunks.push(text.slice(i, i + chunkSize));

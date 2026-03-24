@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ChatMessage } from '../types';
 import { chatApi } from '../services/api';
+import { getApiError } from '../lib/utils';
 
 function genId() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -93,7 +94,7 @@ export function useChat(documentId?: string) {
           id: genId(),
           role: 'assistant',
           content:
-            err instanceof Error ? err.message : 'Something went wrong. Please try again.',
+            getApiError(err, 'Something went wrong. Please try again.'),
           timestamp: new Date(),
           isError: true,
         };
