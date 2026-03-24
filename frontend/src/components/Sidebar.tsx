@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 import { Search, ChevronLeft, ChevronRight, ArrowUpFromLine, Loader2, Trash2, Flame } from 'lucide-react';
 import { DocumentMetadata, getFileType, formatFileSize, formatDate } from '../types';
 import { FileIcon } from './FileIcon';
@@ -31,22 +31,41 @@ export function Sidebar({
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [dropError, setDropError] = useState<string | null>(null);
+
+  const MAX_FILE_SIZE = 80 * 1024 * 1024; // 80 MB
 
   const onDrop = useCallback(
     async (accepted: File[]) => {
+      setDropError(null);
       if (accepted[0]) await onUpload(accepted[0]);
     },
     [onUpload]
   );
 
+  const onDropRejected = useCallback((rejections: FileRejection[]) => {
+    const first = rejections[0];
+    if (!first) return;
+    const code = first.errors[0]?.code;
+    if (code === 'file-too-large') {
+      const sizeMB = (first.file.size / (1024 * 1024)).toFixed(1);
+      setDropError(`File is ${sizeMB} MB — exceeds the 80 MB limit.`);
+    } else if (code === 'file-invalid-type') {
+      setDropError('Only PDF, DOCX, and TXT files are allowed.');
+    } else {
+      setDropError(first.errors[0]?.message ?? 'File rejected.');
+    }
+  }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     accept: {
       'application/pdf': ['.pdf'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
       'text/plain': ['.txt'],
     },
-    maxSize: 80 * 1024 * 1024,
+    maxSize: MAX_FILE_SIZE,
     multiple: false,
     disabled: isUploading,
   });
@@ -146,6 +165,14 @@ export function Sidebar({
             </>
           )}
         </div>
+
+        {/* Drop error message */}
+        {dropError && (
+          <div className="flex items-start gap-1.5 mt-2 px-1">
+            <span className="text-orange-400 text-[10px] flex-shrink-0 mt-px">⚠</span>
+            <p className="text-orange-400 text-[10px] leading-snug">{dropError}</p>
+          </div>
+        )}
       </div>
 
       {/* ── Your Files header + Search ── */}
